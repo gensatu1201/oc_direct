@@ -1,0 +1,26 @@
+{
+  "name": "OpenClaw Direct",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  
+  // 1. Create the persistent link as soon as the container is created
+  "postCreateCommand": "mkdir -p /workspaces/oc_direct/.openclaw_data && ln -sfn /workspaces/oc_direct/.openclaw_data ~/.openclaw",
+  
+  // 2. Automatically try to start the gateway when the codespace wakes up
+  "postStartCommand": "openclaw gateway run > /tmp/openclaw_boot.log 2>&1 &",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "isabea.openclaw-vscode"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+
+  // 3. Make sure the dashboard port is always visible
+  "forwardPorts": [18789],
+  
+  "remoteUser": "node"
+}
