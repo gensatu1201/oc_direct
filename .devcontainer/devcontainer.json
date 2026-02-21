@@ -2,13 +2,11 @@
   "name": "OpenClaw Direct",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
   
-  // 1. Install OpenClaw AND create the persistent link
-  // Note: We install @latest to ensure they have the exact version you're demoing.
+  // 1. Install OpenClaw and bridge the persistent repo folder to the home directory
   "postCreateCommand": "sudo npm install -g openclaw@latest && mkdir -p /workspaces/oc_direct/.openclaw_data && ln -sfn /workspaces/oc_direct/.openclaw_data ~/.openclaw",
   
-  // 2. Automatically try to start the gateway when the codespace wakes up
-  // It will only succeed AFTER they run 'onboard', which is perfect for a demo.
-  "postStartCommand": "openclaw gateway run > /tmp/openclaw_boot.log 2>&1 &",
+  // 2. Load .env keys and start the gateway automatically if the file exists
+  "postStartCommand": "if [ -f /workspaces/oc_direct/.env ]; then export $(grep -v '^#' /workspaces/oc_direct/.env | xargs) && openclaw gateway run > /tmp/openclaw_boot.log 2>&1 &; fi",
 
   "customizations": {
     "vscode": {
@@ -21,6 +19,7 @@
     }
   },
 
+  // 3. Auto-forward the OpenClaw Dashboard port
   "forwardPorts": [18789],
   "remoteUser": "node"
 }
