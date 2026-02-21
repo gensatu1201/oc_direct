@@ -2,11 +2,11 @@
   "name": "OpenClaw Direct",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
   
-  // 1. Install OpenClaw and bridge the persistent repo folder to the home directory
+  // 1. Install OpenClaw globally and bridge the persistent repo folder to the home directory
   "postCreateCommand": "sudo npm install -g openclaw@latest && mkdir -p /workspaces/oc_direct/.openclaw_data && ln -sfn /workspaces/oc_direct/.openclaw_data ~/.openclaw",
   
-  // 2. Load .env keys and start the gateway automatically if the file exists
-  "postStartCommand": "if [ -f /workspaces/oc_direct/.env ]; then export $(grep -v '^#' /workspaces/oc_direct/.env | xargs) && openclaw gateway run > /tmp/openclaw_boot.log 2>&1 &; fi",
+  // 2. The Startup Logic: Only auto-starts if .env AND config exist. Otherwise, it welcomes the learner.
+  "postStartCommand": "if [ -f /workspaces/oc_direct/.env ] && [ -f /workspaces/oc_direct/.openclaw_data/openclaw.json ]; then export $(grep -v '^#' /workspaces/oc_direct/.env | xargs) && openclaw gateway run > /tmp/openclaw_boot.log 2>&1 & echo '🚀 OpenClaw Gateway started in background.'; else echo '👋 Welcome! Setup required: 1. Create .env file 2. Run: openclaw onboard'; fi",
 
   "customizations": {
     "vscode": {
